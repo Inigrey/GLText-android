@@ -1,0 +1,4 @@
+Stereovision is what gives us the notion of a depth component to our field of view.
+To say that 3D is all the rage today is at best an understatement.
+The Android emulator is notoriously buggy and notoriously slow.
+For a video of Sketchpad in operation, go to YouTube and search for Sketchpad or Ivan Sutherland.

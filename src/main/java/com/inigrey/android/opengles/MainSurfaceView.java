@@ -12,48 +12,63 @@ public class MainSurfaceView extends GLSurfaceView {
     public MainRenderer renderer;
     private GLTextToucher glText;
     float dx, dy;
-    public MainSurfaceView(Context context){
-        super( context );
-        renderer = new MainRenderer( context );
-        setRenderer( renderer );
+
+    public MainSurfaceView(Context context) {
+        super(context);
+        renderer = new MainRenderer(context);
+        setRenderer(renderer);
     }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         PointF curr = new PointF(event.getX(), event.getY());
-        int x=(int)curr.x,y=renderer.getHeight()-(int)curr.y;
+        int x = (int) curr.x, y = renderer.getHeight() - (int) curr.y;
         Log.i(LOG_TAG, "Received event at x=" + curr.x +
-
-                ", y=" + curr.y + ":"); switch (event.getAction()) {
+                ", y=" + curr.y + ":");
+        switch (event.getAction()) {
 
             case MotionEvent.ACTION_DOWN:
 
                 Log.i(LOG_TAG, " ACTION_DOWN");
-                for(GLTextToucher text:renderer.getGlTexts()){
-                    if(x>=text.getStartX()&& x<=text.getStartX()+text.getWidth()){
-                        if(y>=text.getStartY()&& y<text.getStartY()+text.getHeight()){
-                            glText = text;
-                            dx=x - text.getStartX();
-                            dy=y - text.getStartY();
-                            Log.i(LOG_TAG, "dx="+dx+" dy="+dy);
-                            break;
+                if (!renderer.getFinish()) {
+                    if (renderer.getGlTexts() != null)
+                        for (GLTextToucher text : renderer.getGlTexts()) {
+                            if (x >= text.getStartX() && x <= text.getStartX() + text.getWidth()) {
+                                if (y >= text.getStartY() && y < text.getStartY() + text.getHeight()) {
+                                    glText = text;
+                                    dx = x - text.getStartX();
+                                    dy = y - text.getStartY();
+                                    renderer.getGlTexts().remove(text);
+                                    renderer.getGlTexts().add(glText);
+                                    Log.i(LOG_TAG, "dx=" + dx + " dy=" + dy);
+                                    break;
+                                }
+                            }
                         }
-                    }
+                } else {
+                    renderer.refinish();
                 }
 
                 break;
 
-            case MotionEvent.ACTION_MOVE: Log.i(LOG_TAG, " ACTION_MOVE");
-                if(glText != null){
+            case MotionEvent.ACTION_MOVE:
+                Log.i(LOG_TAG, " ACTION_MOVE");
+                if (glText != null) {
                     glText.setPosition(x - dx, y - dy);
-                    Log.i(LOG_TAG, "dx="+dx+" dy="+dy);
+                    Log.i(LOG_TAG, "dx=" + dx + " dy=" + dy);
                 }
                 break;
 
             case MotionEvent.ACTION_UP:
-                glText = null;
-                Log.i(LOG_TAG,  " ACTION_UP"); break;
+                if (glText != null) {
+                    glText = null;
+                    renderer.repositions();
+                }
+                Log.i(LOG_TAG, " ACTION_UP");
+                break;
 
-            case MotionEvent.ACTION_CANCEL: Log.i(LOG_TAG, " ACTION_CANCEL");
+            case MotionEvent.ACTION_CANCEL:
+                Log.i(LOG_TAG, " ACTION_CANCEL");
 
                 break;
 
