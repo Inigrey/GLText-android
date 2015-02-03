@@ -6,6 +6,9 @@ import android.opengl.GLSurfaceView;
 import android.util.Log;
 import android.view.MotionEvent;
 
+import java.util.Iterator;
+import java.util.ListIterator;
+
 public class MainSurfaceView extends GLSurfaceView {
 
     public static final String LOG_TAG = "BoxDrawingView";
@@ -55,6 +58,23 @@ public class MainSurfaceView extends GLSurfaceView {
                 Log.i(LOG_TAG, " ACTION_MOVE");
                 if (glText != null) {
                     glText.setPosition(x - dx, y - dy);
+                    float centerX=(glText.getStartX()+glText.getWidth())/2.0f;
+                    float centerY=(glText.getStartY()+glText.getHeight())/2.0f;
+                    Iterator<GLTextToucher> iterator=renderer.getGlTexts().iterator();
+                    while(iterator.hasNext()){
+                        GLTextToucher text1 = iterator.next();
+                        if(iterator.hasNext()){
+                            GLTextToucher text2 = iterator.next();
+                            if((text1.getStartX()+text1.getWidth())/2.0f<centerX)
+                                if(text1.getStartY()<centerY && text1.getStartY()+text1.getHeight()>=centerY) {
+                                    if ((text2.getStartX() + text2.getWidth()) / 2.0f >= centerX) {
+
+                                    }else{
+
+                                    }
+                                }
+                        }
+                    }
                     Log.i(LOG_TAG, "dx=" + dx + " dy=" + dy);
                 }
                 break;

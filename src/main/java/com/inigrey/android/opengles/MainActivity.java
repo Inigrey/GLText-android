@@ -5,6 +5,7 @@ import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.widget.FrameLayout;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -28,10 +29,12 @@ public class MainActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        FrameLayout layout= (FrameLayout) findViewById(R.id.glView);
         glView = new MainSurfaceView(this);
+        layout.addView(glView);
         Handler handler = new Handler();
         handler.post(runnable);
-        setContentView(glView);
 
     }
 
